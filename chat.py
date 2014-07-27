@@ -2,7 +2,11 @@ import tornado.web
 import tornado.websocket
 import tornado.ioloop
 
+# could be redis
 connections = []
+
+# could be database 
+msgs = []
 
 class ChatServer(tornado.websocket.WebSocketHandler):
 
@@ -11,7 +15,7 @@ class ChatServer(tornado.websocket.WebSocketHandler):
 		connections.append(self)
 
 	def on_message(self,msg):
-		print msg
+		msgs.append(msg)
 		for connection in connections:
 			connection.write_message(msg)
 
@@ -22,9 +26,13 @@ class ChatServer(tornado.websocket.WebSocketHandler):
 class HomePage(tornado.web.RequestHandler):
 
 	def get(self):
-		self.render("chat.html")
+		self.getChatTemplate()
 
+	def post(self):
+		self.getChatTemplate()
 
+	def getChatTemplate(self):
+		self.render("chat.html",msgs=msgs)
 
 
 urls = [('/',HomePage),('/chat',ChatServer)]
