@@ -1,0 +1,42 @@
+<h1>Body</h1>
+
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   
+<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(pull);	
+	
+	function drawChart(data) {
+		
+		var json = JSON.parse(data)
+		console.log(json.length);
+		var result = [['Source', 'Count']];
+		for(var i=0;i<json.length;i++){
+			var temp = [];
+			console.log("source "+json[i]["source"]);
+			temp.push(json[i]["source"]);
+			temp.push(json[i]["count"]);
+			result.push(temp);
+		}
+		
+        var data = google.visualization.arrayToDataTable(result);
+
+        var options = {
+          title: 'Source / count comparison'          
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+     }
+	
+	function pull(){
+		$.get('http://localhost:8888/pull',function (data) {
+			$('#content').html(data);
+			drawChart(data);
+			pull();			
+		});
+	}	
+</script>
