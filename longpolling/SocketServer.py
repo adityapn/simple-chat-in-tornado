@@ -7,7 +7,7 @@ import time
 import json
 import tornado.concurrent
 
-conn = psycopg2.connect("dbname=datacollection_new user=housing password=housing host=127.0.0.1")
+conn = psycopg2.connect("dbname=<database> user=<user> password=<password> host=<host>")
 
 @tornado.gen.coroutine
 def async_sleep(timeout):
@@ -26,7 +26,7 @@ class PushServer(tornado.web.RequestHandler):
 		self.finish()
 		
 	def getData(self):
-		sql = "select source , count(*) from cs_options_property group by source"
+		sql = "select source , count(*) from table group by source"
 		curr = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
 		curr.execute(sql)
 		data = curr.fetchall()		
