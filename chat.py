@@ -9,7 +9,10 @@ connections = []
 msgs = []
 
 class ChatServer(tornado.websocket.WebSocketHandler):
-
+	
+	def check_origin(self, origin):
+    		return True
+    	
 	def open(self):
 		print "client connected"
 		connections.append(self)
